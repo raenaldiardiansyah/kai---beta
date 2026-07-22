@@ -31,8 +31,19 @@ function getSeverityColorClass(severity?: Insight["severity"]) {
   return "browser-item-normal";
 }
 
-export function InteractiveTrainsetPanel({ compositions }: { compositions: TrainsetComposition[] }) {
-  const [selectedTrainsetIndex, setSelectedTrainsetIndex] = useState(0);
+export function InteractiveTrainsetPanel({
+  compositions,
+  initialTrainsetId,
+  onBackToGrid
+}: {
+  compositions: TrainsetComposition[];
+  initialTrainsetId?: string;
+  onBackToGrid?: () => void;
+}) {
+  const initialIndex = initialTrainsetId
+    ? Math.max(0, compositions.findIndex((item) => item.trainsetId === initialTrainsetId))
+    : 0;
+  const [selectedTrainsetIndex, setSelectedTrainsetIndex] = useState(initialIndex);
   const [selectedCars, setSelectedCars] = useState<Record<string, number>>({});
   const [isCompositionModalOpen, setIsCompositionModalOpen] = useState(false);
   const [compositionQuery, setCompositionQuery] = useState("");
@@ -88,22 +99,29 @@ export function InteractiveTrainsetPanel({ compositions }: { compositions: Train
 
   return (
     <div className="overview-left-stack">
-      <TrainComposition
-        trainsetId={composition.trainsetId}
-        totalCars={composition.totalCars}
-        cars={composition.cars}
-        selectedCar={selectedCarNum}
-        onSelectCar={selectCar}
-        carsInsights={composition.carInsights}
-        trainsetCode={composition.displayCode}
-        trainsetName={composition.displayName}
-        currentTrainsetIndex={safeIndex}
-        totalTrainsets={compositions.length}
-        onPreviousTrainset={showPreviousTrainset}
-        onNextTrainset={showNextTrainset}
-        onViewMore={openCompositionModal}
-        activeSeverity={defaultInsight.severity}
-      />
+      <div className="overview-composition-slot">
+        {onBackToGrid ? (
+          <button type="button" className="overview-cart-back-link" onClick={onBackToGrid}>
+            ← Overview TS
+          </button>
+        ) : null}
+        <TrainComposition
+          trainsetId={composition.trainsetId}
+          totalCars={composition.totalCars}
+          cars={composition.cars}
+          selectedCar={selectedCarNum}
+          onSelectCar={selectCar}
+          carsInsights={composition.carInsights}
+          trainsetCode={composition.displayCode}
+          trainsetName={composition.displayName}
+          currentTrainsetIndex={safeIndex}
+          totalTrainsets={compositions.length}
+          onPreviousTrainset={showPreviousTrainset}
+          onNextTrainset={showNextTrainset}
+          onViewMore={openCompositionModal}
+          activeSeverity={defaultInsight.severity}
+        />
+      </div>
       <PriorityInsightCard insight={selectedInsight} />
       <Modal
         open={isCompositionModalOpen}

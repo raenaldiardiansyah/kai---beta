@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/Card";
 import type { OverviewData } from "@/services/overviewService";
 import Link from "next/link";
 
-export function SummaryCards({ summary }: { summary: OverviewData["summary"] }) {
+export function SummaryCards({ summary, variant = "full" }: { summary: OverviewData["summary"]; variant?: "full" | "compact" }) {
   const items = [
     { label: `Armada Aktif · Data ${summary.dataAvailabilityPercent}%`, value: `${summary.onlineTrainsets}/${summary.totalTrainsets}`, icon: <Broadcast size={24} weight="fill" color="var(--accent)" />, link: "/live-monitoring" },
     { label: "Gerbong Online", value: `${summary.onlineCars}/${summary.totalCars}`, icon: <Train size={24} weight="fill" color="var(--muted)" />, link: "/trainset" },
@@ -13,9 +13,11 @@ export function SummaryCards({ summary }: { summary: OverviewData["summary"] }) 
     { label: "Insight LLM", value: summary.insightCount, icon: <Brain size={24} weight="fill" color="#2563eb" />, link: "/insight-analytic", delta: summary.showTrends ? "1" : undefined, dir: "up", deltaColor: "var(--danger)" }
   ];
 
+  const visibleItems = variant === "compact" ? items.slice(0, 3) : items;
+
   return (
-    <div className="summary-grid-6">
-      {items.map((item) => (
+    <div className={variant === "compact" ? "summary-grid-3" : "summary-grid-6"}>
+      {visibleItems.map((item) => (
         <Card key={item.label} className="summary-card-container">
           <Link
             href={item.link}
