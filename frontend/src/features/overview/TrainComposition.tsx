@@ -93,7 +93,10 @@ export function TrainComposition({
   const navigation = showTrainsetNavigation || onViewMore ? (
     <div className="trainset-composition-actions">
       <div className="trainset-composition-left-group">
-        <span className={`trainset-composition-active-label ${getSeverityBadgeClass(activeSeverity)}`}>
+        <span
+          className={`trainset-composition-active-label ${getSeverityBadgeClass(activeSeverity)}`}
+          title={trainsetName}
+        >
           {trainsetCode}
         </span>
         {onViewMore ? (

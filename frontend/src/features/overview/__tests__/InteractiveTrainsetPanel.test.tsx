@@ -83,9 +83,9 @@ describe("InteractiveTrainsetPanel", () => {
 
     render(<InteractiveTrainsetPanel compositions={compositions} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Lihat lebih banyak" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pilih Trainset" }));
 
-    const search = screen.getByRole("textbox", { name: "Cari armada atau komposisi kereta" });
+    const search = screen.getByRole("textbox", { name: "Cari Trainset" });
     expect(search).toHaveFocus();
 
     fireEvent.change(search, { target: { value: "T" } });
@@ -96,7 +96,7 @@ describe("InteractiveTrainsetPanel", () => {
 
     fireEvent.click(screen.getByRole("option", { name: /TS-002/i }));
 
-    expect(screen.queryByRole("dialog", { name: "Cari Komposisi Kereta" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Pilih Trainset" })).not.toBeInTheDocument();
     expect(screen.getByTitle("Kereta Dua")).toHaveTextContent("TS-002");
   });
 });

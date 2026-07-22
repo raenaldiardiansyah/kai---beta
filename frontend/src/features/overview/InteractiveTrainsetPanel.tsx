@@ -116,7 +116,7 @@ export function InteractiveTrainsetPanel({ compositions }: { compositions: Train
             <MagnifyingGlass size={18} aria-hidden="true" />
             <Input
               autoFocus
-              aria-label="Pilih Trainset untuk menampilkan komposisinya di Ringkasan"
+              aria-label="Cari Trainset"
               placeholder="Ketik kode atau nama kereta, contoh: TS-001"
               value={compositionQuery}
               onChange={(event) => setCompositionQuery(event.target.value)}
