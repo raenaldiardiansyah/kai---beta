@@ -1,10 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import { ActiveAlarmTable } from "@/features/overview/ActiveAlarmTable";
-import { PredictiveMaintenancePanel } from "@/features/overview/PredictiveMaintenancePanel";
-import { InteractiveTrainsetPanel } from "@/features/overview/InteractiveTrainsetPanel";
-import { ConnectedTrainList } from "@/features/overview/ConnectedTrainList";
+import { useRouter } from "next/navigation";
+import { TrainsetStatusGrid } from "@/features/overview/TrainsetStatusGrid";
 import { SummaryCards } from "@/features/overview/SummaryCards";
 import { TrainPositionMap } from "@/features/overview/TrainPositionMap";
 import { getOverviewData, type OverviewData } from "@/services/overviewService";
@@ -13,6 +11,7 @@ import { PageSkeleton } from "@/components/layout/PageSkeleton";
 import { DataUnavailableState } from "@/components/data/DataUnavailableState";
 
 export default function OverviewPage() {
+  const router = useRouter();
   const loader = useCallback((signal: AbortSignal, mode: "dummy" | "live") => getOverviewData(signal, mode), []);
   const resource = useRamsResource<OverviewData>(loader, 15_000);
 
@@ -22,24 +21,20 @@ export default function OverviewPage() {
   }
   const data = resource.data;
 
+  const goToCart = (trainsetId: string) => {
+    router.push(`/overview/cart?trainset=${encodeURIComponent(trainsetId)}`);
+  };
+
   return (
-    <>
-      <div className="page-grid overview-compact-layout overview-page">
-        <section className="overview-top-grid">
-          <InteractiveTrainsetPanel compositions={data.trainsetCompositions} />
-          <TrainPositionMap points={data.mapPoints} />
-        </section>
+    <div className="page-grid overview-compact-layout overview-page">
+      <section className="overview-top-grid">
+        <TrainsetStatusGrid trainsets={data.trainsets} onSelectTrainset={goToCart} />
+        <TrainPositionMap points={data.mapPoints} />
+      </section>
 
-        <section className="overview-row-2">
-          <SummaryCards summary={data.summary} />
-        </section>
-
-        <section className="overview-bottom-grid">
-          <ConnectedTrainList trainsets={data.trainsets.slice(0, 5)} />
-          <ActiveAlarmTable alarms={data.alarms} />
-          <PredictiveMaintenancePanel risks={data.maintenance} insights={data.insights} />
-        </section>
-      </div>
-    </>
+      <section className="overview-row-2">
+        <SummaryCards summary={data.summary} variant="compact" />
+      </section>
+    </div>
   );
 }

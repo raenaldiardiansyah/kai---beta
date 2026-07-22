@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { MagnifyingGlass, Train } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
@@ -34,11 +35,11 @@ function getSeverityColorClass(severity?: Insight["severity"]) {
 export function InteractiveTrainsetPanel({
   compositions,
   initialTrainsetId,
-  onBackToGrid
+  backHref
 }: {
   compositions: TrainsetComposition[];
   initialTrainsetId?: string;
-  onBackToGrid?: () => void;
+  backHref?: string;
 }) {
   const initialIndex = initialTrainsetId
     ? Math.max(0, compositions.findIndex((item) => item.trainsetId === initialTrainsetId))
@@ -100,10 +101,10 @@ export function InteractiveTrainsetPanel({
   return (
     <div className="overview-left-stack">
       <div className="overview-composition-slot">
-        {onBackToGrid ? (
-          <button type="button" className="overview-cart-back-link" onClick={onBackToGrid}>
+        {backHref ? (
+          <Link href={backHref} className="overview-cart-back-link">
             ← Overview TS
-          </button>
+          </Link>
         ) : null}
         <TrainComposition
           trainsetId={composition.trainsetId}

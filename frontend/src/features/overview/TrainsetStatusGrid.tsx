@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
+import { getTrainsetIdentity } from "@/adapters/identityAdapter";
 import type { Trainset } from "@/types/trainset";
 
 type StatusTone = "normal" | "watch" | "critical";
@@ -30,6 +31,7 @@ export function TrainsetStatusGrid({
         <div className="ts-status-grid" role="list" aria-label="Status seluruh trainset">
           {trainsets.map((trainset) => {
             const tone = getStatusTone(trainset);
+            const identity = getTrainsetIdentity(trainset.id, trainset.name);
             return (
               <button
                 key={trainset.id}
@@ -37,9 +39,9 @@ export function TrainsetStatusGrid({
                 role="listitem"
                 className={`ts-status-box ts-status-box-${tone}`}
                 onClick={() => onSelectTrainset(trainset.id)}
-                title={`${trainset.id} · ${trainset.healthStatus} · Kesehatan ${trainset.healthScore}%`}
+                title={`${identity.displayCode} · ${identity.displayName} · ${trainset.healthStatus} · Kesehatan ${trainset.healthScore}%`}
               >
-                {trainset.id}
+                {identity.displayCode}
               </button>
             );
           })}

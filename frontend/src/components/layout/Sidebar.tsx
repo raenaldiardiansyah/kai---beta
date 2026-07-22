@@ -124,10 +124,11 @@ export function Sidebar() {
           <nav aria-label="Main navigation">
             {routes.map((route) => {
               const Icon = route.icon;
+              const isActive = pathname === route.href || pathname.startsWith(`${route.href}/`);
 
               return (
                 <Link
-                  className={`sidebar-link${pathname === route.href ? " active" : ""}${isCollapsed ? " collapsed" : ""}`}
+                  className={`sidebar-link${isActive ? " active" : ""}${isCollapsed ? " collapsed" : ""}`}
                   href={route.href}
                   key={route.href}
                   title={isCollapsed ? route.label : undefined}
